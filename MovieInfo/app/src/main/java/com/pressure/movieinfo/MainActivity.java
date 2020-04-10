@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Movie> MoviesList;
+    private PagedList<Movie>moviesList;
     private RecyclerView recyclerView;
     private MainViewModel viewModel;
     private MoviesAdapter adapter;
@@ -52,24 +53,23 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rcview);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-
+        adapter = new MoviesAdapter(this);
+        recyclerView.setAdapter(adapter);
 
     }
     void getMovies()
     {
-        viewModel.getMoviesList().observe(MainActivity.this, new Observer<List<Movie>>() {
+        viewModel.getMovies().observe(MainActivity.this, new Observer<PagedList<Movie>>() {
             @Override
-            public void onChanged(List<Movie> movies) {
-                MoviesList = movies;
+            public void onChanged(PagedList<Movie> movies) {
+                moviesList = movies;
                 loadList();
             }
         });
     }
     void loadList()
     {
-        adapter = new MoviesAdapter(this,MoviesList);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        adapter.submitList(moviesList);
 
     }
 }

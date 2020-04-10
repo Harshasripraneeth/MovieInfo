@@ -11,4 +11,6 @@ public interface APIClient {
     @GET("movie/popular")
     Call<MovieDBResponse> getPopularMovies(@Query("api_key") String apiKey);
 
+    @GET("movie/popular")
+    Call<MovieDBResponse> getPopularMoviesPaging(@Query("api_key") String apiKey,@Query("page") Long page);
 }

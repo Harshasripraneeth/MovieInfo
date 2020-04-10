@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pressure.movieinfo.R;
@@ -16,14 +17,13 @@ import com.pressure.movieinfo.databinding.RcviewLayoutBinding;
 import com.pressure.movieinfo.model.Movie;
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MoviesAdapter extends PagedListAdapter<Movie,MoviesAdapter.ViewHolder> {
 
     private Context context;
-    private List<Movie> list;
-
-    public MoviesAdapter(Context context, List<Movie> list) {
+    public MoviesAdapter(Context context) {
+        super(Movie.CALLBACK);
         this.context = context;
-        this.list = list;
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -39,7 +39,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                     if(pos != RecyclerView.NO_POSITION)
                     {
                         Intent intent = new Intent(context, MovieActivity.class);
-                        intent.putExtra("movie",list.get(pos));
+                        intent.putExtra("movie",getItem(pos));
                         context.startActivity(intent);
                     }
 
@@ -59,19 +59,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapter.ViewHolder holder, int position) {
-        Movie movie = list.get(position);
+        Movie movie = getItem(position);
         holder.rcviewLayoutBinding.setMovie(movie);
 
 
     }
-    public void setList(List<Movie> list)
-    {
-        this.list = list;
-        notifyDataSetChanged();
-    }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
 }
